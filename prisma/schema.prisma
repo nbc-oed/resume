@@ -25,12 +25,12 @@ model Users {
 }
 
 enum Kind {
-  user
-  admin
+  USER
+  ADMIN
 }
 
 model UserInfos {
-  userInfoId Int      @id @map("userInfoId")
+  userInfoId Int      @id @default(autoincrement()) @map("userInfoId")
   userId     Int      @unique @map("userId")
   name       String   @map("name")
   age        Int      @map("age")
@@ -45,8 +45,8 @@ model UserInfos {
 }
 
 enum Gender {
-  Female
-  Male
+  FEMALE
+  MALE
 }
 
 model Resumes {
