@@ -2,6 +2,9 @@ import express from "express";
 import { prisma } from "../utils/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const router = express.Router();
 
@@ -57,7 +60,33 @@ router.post("/sign-up", async (req, res, next) => {
 });
 
 // 로그인 API
-router.post("/sign-in", async (req, res, next) => {});
+router.post("/sign-in", async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await prisma.users.findUnique({ where: { email } });
+    if (!user)
+      return res
+        .status(401)
+        .json({ message: "해당하는 유저가 존재하지 않습니다." });
+
+    if (!(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: "비밀번호가 올바르지 않습니다." });
+    }
+
+    const accessToken = jwt.sign(
+      { userId: user.userId },
+      process.env.ACCESS_TOKEN_SECRET_KEY,
+      { expiresIn: "12h" }
+    );
+
+    res.cookie("authorization", `Bearer ${accessToken}`);
+
+    return res.status(200).json({ message: "로그인 되었습니다." });
+  } catch (err) {
+    next(err);
+  }
+});
 
 // 유저(본인) 정보 조회 API
 router.get("/users", async (req, res, next) => {});
