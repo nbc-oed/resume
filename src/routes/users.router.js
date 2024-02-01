@@ -3,6 +3,7 @@ import { prisma } from "../utils/index.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import authMiddleware from "../middlewares/auth.middleware.js";
 
 dotenv.config();
 
@@ -89,6 +90,21 @@ router.post("/sign-in", async (req, res, next) => {
 });
 
 // 유저(본인) 정보 조회 API
-router.get("/users", async (req, res, next) => {});
+router.get("/users", authMiddleware, async (req, res, next) => {
+  const { userId } = req.user;
+
+  const userInfo = await prisma.users.findFirst({
+    where: { userId: +userId },
+    select: {
+      userId: true,
+      email: true,
+      createdAt: true,
+      updatedAt: true,
+      userInfo: true,
+    },
+  });
+
+  return res.status(200).json({ data: userInfo });
+});
 
 export default router;
