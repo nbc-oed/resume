@@ -6,7 +6,6 @@ const router = express.Router();
 
 // 이력서 목록 조회 API
 router.get("/resumes", async (req, res, next) => {
-  //   const { orderKey, orderValue } = URLSearchParams;
   const resumes = await prisma.resumes.findMany({
     select: {
       resumeId: true,
@@ -55,14 +54,39 @@ router.post("/resumes", authMiddleware, async (req, res, next) => {
 });
 
 // 이력서 상세 조회 API
-router.get("/resumes/:resumId", async (req, res, next) => {});
+router.get("/resumes/:resumeId", async (req, res, next) => {
+  const { resumeId } = req.params;
+  const resume = await prisma.resumes.findFirst({
+    where: { resumeId: +resumeId },
+    select: {
+      resumeId: true,
+      title: true,
+      content: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      user: {
+        select: {
+          userInfo: {
+            select: {
+              name: true,
+              age: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return res.status(200).json({ data: resume });
+});
 
 // 이력서 수정 API
-router.put("/resumes/:resumId", authMiddleware, async (req, res, next) => {});
+router.put("/resumes/:resumeId", authMiddleware, async (req, res, next) => {});
 
 // 이력서 삭제 API
 router.delete(
-  "/resumes/:resumId",
+  "/resumes/:resumeId",
   authMiddleware,
   async (req, res, next) => {}
 );
