@@ -82,7 +82,38 @@ router.get("/resumes/:resumeId", async (req, res, next) => {
 });
 
 // 이력서 수정 API
-router.put("/resumes/:resumeId", authMiddleware, async (req, res, next) => {});
+router.put("/resumes/:resumeId", authMiddleware, async (req, res, next) => {
+  try {
+    const { userId } = req.user;
+    const { resumeId } = req.params;
+    let { title, content, status } = req.body;
+    if (!title && !content && !status)
+      return res.status(400).json({ message: "수정할 값을 입력해주세요." });
+
+    const resume = await prisma.resumes.findFirst({
+      where: { resumeId: +resumeId },
+    });
+    if (!resume)
+      return res.status(400).json({ message: "이력서가 존재하지 않습니다." });
+    if (+userId !== resume.userId)
+      return res
+        .status(401)
+        .json({ message: "본인의 이력서만 수정할 수 있습니다." });
+
+    title = title ? title : resume.title;
+    content = content ? content : resume.content;
+    status = status ? status : resume.status;
+
+    await prisma.resumes.update({
+      where: { resumeId: +resumeId },
+      data: { title, content, status },
+    });
+
+    return res.status(201).json({ message: "수정이 완료되었습니다." });
+  } catch (err) {
+    next(err);
+  }
+});
 
 // 이력서 삭제 API
 router.delete(
