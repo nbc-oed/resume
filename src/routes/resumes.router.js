@@ -106,7 +106,7 @@ router.put("/resumes/:resumeId", authMiddleware, async (req, res, next) => {
       where: { resumeId: +resumeId },
     });
     if (!resume)
-      return res.status(400).json({ message: "이력서가 존재하지 않습니다." });
+      return res.status(404).json({ message: "이력서가 존재하지 않습니다." });
     if (+userId !== resume.userId)
       return res
         .status(401)
@@ -141,7 +141,7 @@ router.delete("/resumes/:resumeId", authMiddleware, async (req, res, next) => {
       where: { resumeId: +resumeId },
     });
     if (!resume)
-      return res.status(400).json({ message: "이력서가 존재하지 않습니다." });
+      return res.status(404).json({ message: "이력서가 존재하지 않습니다." });
     if (+userId !== resume.userId)
       return res
         .status(401)

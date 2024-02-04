@@ -15,10 +15,10 @@ router.post("/sign-up", async (req, res, next) => {
     const { email, password, checkPassword, name, age, college, gender } =
       req.body;
     if (password !== checkPassword)
-      return res.status(401).json({ message: "비밀번호가 일치하지 않습니다." });
+      return res.status(403).json({ message: "비밀번호가 일치하지 않습니다." });
     if (password.length < 6)
       return res
-        .status(401)
+        .status(403)
         .json({ message: "비밀번호는 6자 이상으로 만들어주세요." });
 
     const isExistEmail = await prisma.users.findUnique({
@@ -68,7 +68,7 @@ router.post("/sign-in", async (req, res, next) => {
     const user = await prisma.users.findUnique({ where: { email } });
     if (!user)
       return res
-        .status(401)
+        .status(404)
         .json({ message: "해당하는 유저가 존재하지 않습니다." });
 
     if (!(await bcrypt.compare(password, user.password))) {
