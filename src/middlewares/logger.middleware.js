@@ -6,7 +6,7 @@ const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
 });
 
-export default (rea, res, next, err) => {
+export default (req, res, next, err) => {
   const start = new Date().getTime();
 
   res.on("finish", () => {

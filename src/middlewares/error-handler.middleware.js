@@ -1,7 +1,10 @@
 export default (err, req, res, next) => {
   console.log(err.name, ":", err.message);
 
-  if (err.name === "ValidationError" || "PrismaClientValidationError") {
+  if (
+    err.name === "ValidationError" ||
+    err.name === "PrismaClientValidationError"
+  ) {
     return res.status(403).json({ message: "올바른 값을 입력해주세요." });
   }
 
