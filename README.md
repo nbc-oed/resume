@@ -1,10 +1,27 @@
-# node4th-resume-api
-🚀<a href="http://3.34.2.44:3018/api/resumes">배포 링크</a>🚀 (AWS EC2)
+# Resume
+
+## 개요
+🚀<a href="deprecated/api/resumes">~~배포 링크~~</a>🚀 (AWS EC2)
+
 - `.env`
   - DB_URL
   - ACCESS_TOKEN_SECRET_KEY
-- <a href="https://www.notion.so/ooheunda/Node-js-2dc62ec40dbf4ece9ccff9bdc98b60c1?pvs=4">API 명세서</a>
 - <a href="https://drawsql.app/teams/me-662/diagrams/node4th-resume-api">ERD</a>
+- 개발 기간: 2024.02.01 ~ 2024.02.05
+
+## [API List](https://www.notion.so/ooheunda/Node-js-2dc62ec40dbf4ece9ccff9bdc98b60c1)
+
+|기능명|endpoint|HTTP method|인증|
+|---|---|---|---|
+|회원가입|`/api/sign-up`|POST|X|
+|로그인|`/api/sign-in`|POST|X|
+|내 정보 조회|`/api/users`|GET|O|
+|이력서 생성|`/api/resumes`|POST|O|
+|이력서 목록 조회|`/api/resumes`|GET|X|
+|이력서 상세 조회|`/api/resumes/:resumeId`|GET|X|
+|이력서 수정|`/api/resumes/:resumeId`|PUT|O|
+|이력서 삭제|`/api/resumes/:resumeId`|DELETE|O|
+
   
 ## 더 고민 해보기
 - **암호화 방식**
